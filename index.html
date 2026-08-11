@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>بطاقتي اليومية - نسخة محسنة</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+:root{
+  --green:#0e4c3a;
+  --green2:#143f33;
+  --gold:#b9892d;
+  --gold2:#d8b765;
+  --cream:#f7f0df;
+  --cream2:#fffaf0;
+  --ink:#17352c;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#ece8de;
+  color:#18352d;
+  font-family:"Noto Kufi Arabic", sans-serif;
+}
+.app{
+  max-width:1450px;
+  margin:auto;
+  padding:18px;
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:18px;
+}
+.controls{
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+  position:sticky;
+  top:12px;
+  height:fit-content;
+}
+.controls h2{
+  margin:0 0 14px;
+  color:var(--green);
+  font-size:21px;
+}
+.controls h3{
+  margin:18px 0 10px;
+  font-size:14px;
+  color:#705721;
+  border-bottom:1px solid #eee;
+  padding-bottom:7px;
+}
+.field{margin-bottom:10px}
+label{display:block;font-size:12px;margin-bottom:5px;color:#555}
+input, textarea, select{
+  width:100%;
+  border:1px solid #d7d2c6;
+  border-radius:10px;
+  padding:10px 11px;
+  font-family:inherit;
+  font-size:13px;
+  background:#fffdfa;
+}
+textarea{min-height:88px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+button{
+  border:none;
+  border-radius:11px;
+  padding:11px 10px;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+}
+.primary{background:var(--green);color:#fff}
+.gold{background:var(--gold);color:white}
+.light{background:#f4efe4;color:#5a4c2a}
+.wide{grid-column:1/-1}
+.tiny{
+  font-size:11px;
+  color:#6f6a5e;
+  line-height:1.7;
+  margin-top:10px;
+}
+
+.workspace{
+  display:flex;
+  flex-wrap:wrap;
+  gap:22px;
+  justify-content:center;
+  align-items:flex-start;
+}
+.poster-wrap{
+  width:min(540px, 100%);
+}
+.poster-title{
+  text-align:center;
+  font-size:13px;
+  margin:0 0 7px;
+  color:#655d4e;
+}
+.poster{
+  position:relative;
+  width:540px;
+  height:960px;
+  transform-origin:top center;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(185,137,45,.05), transparent 28%),
+    repeating-linear-gradient(45deg, rgba(14,76,58,.018) 0 1px, transparent 1px 18px),
+    var(--cream2);
+  overflow:hidden;
+  border:2px solid var(--gold);
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+  color:var(--ink);
+}
+.poster:before{
+  content:"";
+  position:absolute;
+  inset:10px;
+  border:1px solid rgba(185,137,45,.65);
+  pointer-events:none;
+}
+.corner{
+  position:absolute;
+  width:95px;height:95px;
+  left:0;top:0;
+  background:
+    radial-gradient(circle at 18px 18px,var(--gold2) 0 4px,transparent 5px),
+    conic-gradient(from 225deg at 0 0, var(--green) 0 25%, transparent 0 100%);
+  opacity:.95;
+}
+.corner.bottom{top:auto;bottom:0;transform:scaleY(-1)}
+.lantern{
+  position:absolute;
+  left:35px; top:52px;
+  width:34px;height:48px;
+  border:3px solid var(--gold);
+  border-radius:9px 9px 12px 12px;
+  background:linear-gradient(#fff9df,#e8d49a);
+}
+.lantern:before{
+  content:"";
+  position:absolute;
+  left:14px;top:-30px;height:30px;
+  border-left:2px dotted var(--gold);
+}
+.lantern:after{
+  content:"";
+  position:absolute;
+  left:7px;right:7px;top:8px;bottom:8px;
+  border:2px solid var(--green);
+  border-radius:5px;
+}
+.bismillah{
+  text-align:center;
+  font-family:"Amiri",serif;
+  font-size:28px;
+  color:var(--green2);
+  margin-top:38px;
+  font-weight:700;
+}
+.top-rule{
+  width:160px;height:1px;background:var(--gold);
+  margin:6px auto 18px;
+  position:relative;
+}
+.top-rule:after{
+  content:"◆";
+  position:absolute;left:50%;top:-10px;transform:translateX(-50%);
+  color:var(--gold);background:var(--cream2);padding:0 6px;font-size:12px;
+}
+.title-badge{
+  width:330px;
+  margin:0 auto 24px;
+  background:var(--green);
+  color:#f8e5b8;
+  border:3px solid var(--gold);
+  border-radius:32px 32px 26px 26px;
+  padding:12px 20px;
+  text-align:center;
+  font-size:31px;
+  font-weight:700;
+}
+.mini-box{
+  width:78%;
+  margin:10px auto;
+  border:1.5px solid var(--gold);
+  border-radius:22px;
+  padding:9px 16px;
+  text-align:center;
+  background:rgba(255,255,255,.45);
+  font-size:14px;
+}
+.prayers{
+  width:76%;
+  margin:14px auto 12px;
+  border:2px solid var(--green);
+  border-radius:20px;
+  padding:5px 18px;
+  background:rgba(255,255,255,.4);
+}
+.prayer-row{
+  height:62px;
+  display:grid;
+  grid-template-columns:1fr 34px 1fr;
+  align-items:center;
+  border-bottom:1px solid rgba(185,137,45,.45);
+  font-family:"Amiri",serif;
+}
+.prayer-row:last-child{border-bottom:none}
+.prayer-name{
+  font-size:29px;font-weight:700;color:var(--green2);text-align:right;
+}
+.prayer-time{
+  font-size:27px;font-weight:700;color:#9a6d1d;text-align:left;direction:ltr;
+}
+.prayer-icon{text-align:center;color:var(--gold);font-size:19px}
+.reminder{
+  width:78%;
+  margin:14px auto 0;
+  background:var(--green);
+  color:white;
+  border:2px solid var(--gold);
+  border-radius:22px;
+  padding:12px 20px;
+  text-align:center;
+  font-family:"Amiri",serif;
+  font-size:21px;
+  line-height:1.6;
+}
+.footer{
+  text-align:center;
+  margin-top:13px;
+  color:#5c584d;
+  font-size:11px;
+}
+.hadith-title{margin-top:60px;width:250px}
+.sallam{
+  text-align:center;
+  font-family:"Amiri",serif;
+  font-size:30px;
+  color:var(--green2);
+  margin-top:22px;
+}
+.hadith-panel{
+  width:78%;
+  min-height:380px;
+  margin:22px auto 14px;
+  border:3px double var(--gold);
+  outline:2px solid var(--green);
+  outline-offset:-9px;
+  border-radius:40px 40px 34px 34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:42px 42px;
+  background:rgba(255,255,255,.35);
+  text-align:center;
+}
+.hadith-text{
+  white-space:pre-line;
+  font-family:"Amiri",serif;
+  font-size:33px;
+  line-height:1.8;
+  color:var(--green2);
+  font-weight:700;
+}
+.source{
+  width:74%;
+  margin:0 auto;
+  border:1.5px solid var(--gold);
+  border-radius:22px;
+  text-align:center;
+  padding:10px 15px;
+  font-size:13px;
+  background:rgba(255,255,255,.45);
+}
+.benefit{
+  width:76%;
+  margin:16px auto 0;
+  border:2px solid var(--green);
+  border-radius:18px;
+  padding:36px 24px 22px;
+  position:relative;
+  text-align:center;
+  background:rgba(255,255,255,.38);
+}
+.benefit-title{
+  position:absolute;
+  top:-18px;left:50%;transform:translateX(-50%);
+  min-width:220px;
+  background:var(--green);
+  border:2px solid var(--gold);
+  border-radius:18px;
+  color:#fff;
+  padding:7px 20px;
+  font-size:18px;
+  font-weight:700;
+}
+.benefit-text{
+  white-space:pre-line;
+  font-family:"Amiri",serif;
+  font-size:20px;
+  line-height:1.7;
+}
+.status{
+  font-size:12px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#f7f3e8;
+  color:#6d5d35;
+  margin-top:10px;
+  line-height:1.7;
+}
+.status.error{background:#fff2f2;color:#9f2f2f}
+.status.ok{background:#eef8f1;color:#1b6b3a}
+@media (max-width: 980px){
+  .app{grid-template-columns:1fr}
+  .controls{position:static}
+}
+@media (max-width: 590px){
+  .app{padding:10px}
+  .poster-wrap{width:100%;overflow:hidden}
+  .poster{
+    transform:scale(calc((100vw - 28px) / 540));
+    margin-bottom:calc((960px * ((100vw - 28px) / 540)) - 960px);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <aside class="controls">
+    <h2>بطاقتي اليومية</h2>
+
+    <h3>البيانات الأساسية</h3>
+    <div class="row">
+      <div class="field">
+        <label>المدينة</label>
+        <input id="city" value="Homs">
+      </div>
+      <div class="field">
+        <label>الدولة</label>
+        <input id="country" value="Syria">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>اختر التاريخ</label>
+      <input id="selectedDate" type="date">
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>اليوم (تلقائي)</label>
+        <input id="day" readonly>
+      </div>
+      <div class="field">
+        <label>التاريخ الهجري (تلقائي)</label>
+        <input id="hijri" readonly>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>التاريخ الميلادي (تلقائي)</label>
+      <input id="gregorian" readonly>
+    </div>
+
+    <div class="btns">
+      <button class="primary" onclick="loadPrayerData()">تحديث المواقيت تلقائيًا</button>
+      <button class="light" onclick="setTodayAndLoad()">العودة إلى اليوم</button>
+    </div>
+
+    <h3>مواقيت الصلاة (تُملأ تلقائيًا ويمكن تعديلها يدويًا إذا أردت)</h3>
+    <div class="row3">
+      <div class="field"><label>الفجر</label><input id="fajr" value=""></div>
+      <div class="field"><label>الشروق</label><input id="sunrise" value=""></div>
+      <div class="field"><label>الظهر</label><input id="dhuhr" value=""></div>
+    </div>
+    <div class="row3">
+      <div class="field"><label>العصر</label><input id="asr" value=""></div>
+      <div class="field"><label>المغرب</label><input id="maghrib" value=""></div>
+      <div class="field"><label>العشاء</label><input id="isha" value=""></div>
+    </div>
+
+    <div class="field">
+      <label>تذكرة قصيرة أسفل الصفحة الأولى</label>
+      <textarea id="reminder">لا تهجر مصحفك… ففيه حياة القلب.</textarea>
+    </div>
+
+    <h3>الصفحة الثانية — حديث اليوم</h3>
+    <div class="field">
+      <label>نص الحديث / التذكرة</label>
+      <textarea id="hadith">مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا، سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ.</textarea>
+    </div>
+
+    <div class="field">
+      <label>المصدر</label>
+      <input id="source" value="رواه مسلم">
+    </div>
+
+    <div class="field">
+      <label>فائدة مختصرة</label>
+      <textarea id="benefit">طلب العلم عبادة وطريق إلى الخير، وكل خطوة صادقة في التعلم تقرّب الإنسان من الفهم والعمل النافع.</textarea>
+    </div>
+
+    <div class="btns">
+      <button class="primary" onclick="exportPoster('page1','مواقيت-الصلاة')">تصدير الصفحة 1</button>
+      <button class="gold" onclick="exportPoster('page2','حديث-اليوم')">تصدير الصفحة 2</button>
+    </div>
+
+    <div id="status" class="status">عند فتح الصفحة سيتم افتراضيًا تحميل بيانات اليوم الحالي.</div>
+
+    <div class="tiny">
+      ملاحظة: جلب المواقيت يحتاج اتصالًا بالإنترنت لأنه يعتمد على خدمة مواقيت صلاة خارجية.
+      إذا لم تعمل الخدمة لأي سبب، تبقى الحقول قابلة للتعديل اليدوي.
+    </div>
+  </aside>
+
+  <main class="workspace">
+
+    <section class="poster-wrap">
+      <div class="poster-title">الصفحة الأولى</div>
+      <div class="poster" id="page1">
+        <div class="corner"></div>
+        <div class="corner bottom"></div>
+        <div class="lantern"></div>
+
+        <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <div class="top-rule"></div>
+        <div class="title-badge">مواقيت الصلاة</div>
+
+        <div class="mini-box">
+          حسب التوقيت المحلي لمدينة <b id="out-city">حمص</b> وما حولها
+        </div>
+
+        <div class="mini-box">
+          <b id="out-day"></b>
+          &nbsp; — &nbsp; <span id="out-hijri"></span>
+          &nbsp; — &nbsp; <span id="out-gregorian"></span>
+        </div>
+
+        <div class="prayers">
+          <div class="prayer-row"><div class="prayer-name">الفجر</div><div class="prayer-icon">✦</div><div class="prayer-time" id="out-fajr"></div></div>
+          <div class="prayer-row"><div class="prayer-name">الشروق</div><div class="prayer-icon">☀</div><div class="prayer-time" id="out-sunrise"></div></div>
+          <div class="prayer-row"><div class="prayer-name">الظهر</div><div class="prayer-icon">◈</div><div class="prayer-time" id="out-dhuhr"></div></div>
+          <div class="prayer-row"><div class="prayer-name">العصر</div><div class="prayer-icon">◆</div><div class="prayer-time" id="out-asr"></div></div>
+          <div class="prayer-row"><div class="prayer-name">المغرب</div><div class="prayer-icon">◒</div><div class="prayer-time" id="out-maghrib"></div></div>
+          <div class="prayer-row"><div class="prayer-name">العشاء</div><div class="prayer-icon">☾</div><div class="prayer-time" id="out-isha"></div></div>
+        </div>
+
+        <div class="reminder" id="out-reminder">لا تهجر مصحفك… ففيه حياة القلب.</div>
+        <div class="footer">✦ قالب يومي قابل للتحديث ✦</div>
+      </div>
+    </section>
+
+    <section class="poster-wrap">
+      <div class="poster-title">الصفحة الثانية</div>
+      <div class="poster" id="page2">
+        <div class="corner"></div>
+        <div class="corner bottom"></div>
+        <div class="lantern"></div>
+
+        <div class="title-badge hadith-title">حديث اليوم</div>
+        <div class="sallam">قال رسول الله ﷺ</div>
+
+        <div class="hadith-panel">
+          <div class="hadith-text" id="out-hadith"></div>
+        </div>
+
+        <div class="source">المصدر: <b id="out-source"></b></div>
+
+        <div class="benefit">
+          <div class="benefit-title">فائدة مختصرة</div>
+          <div class="benefit-text" id="out-benefit"></div>
+        </div>
+
+        <div class="footer" style="margin-top:20px">✦ قالب يومي قابل للتحديث ✦</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const map = {
+  city:'out-city', day:'out-day', hijri:'out-hijri', gregorian:'out-gregorian',
+  fajr:'out-fajr', sunrise:'out-sunrise', dhuhr:'out-dhuhr',
+  asr:'out-asr', maghrib:'out-maghrib', isha:'out-isha',
+  reminder:'out-reminder', hadith:'out-hadith', source:'out-source', benefit:'out-benefit'
+};
+
+function syncField(id){
+  const src=document.getElementById(id);
+  const dst=document.getElementById(map[id]);
+  if(dst) dst.textContent = src.value;
+}
+Object.keys(map).forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input', ()=>syncField(id));
+});
+
+function setStatus(msg, cls=''){
+  const s=document.getElementById('status');
+  s.textContent=msg;
+  s.className='status'+(cls ? ' '+cls : '');
+}
+
+function formatDateForApi(isoDate){
+  const [y,m,d] = isoDate.split('-');
+  return `${d}-${m}-${y}`;
+}
+
+function setTodayISO(){
+  const t = new Date();
+  const yyyy = t.getFullYear();
+  const mm = String(t.getMonth()+1).padStart(2,'0');
+  const dd = String(t.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function applyMetaFromApi(data){
+  const g = data.data.date.gregorian;
+  const h = data.data.date.hijri;
+
+  document.getElementById('day').value = g.weekday.ar;
+  document.getElementById('gregorian').value = `${g.day} ${g.month.ar} ${g.year} م`;
+  document.getElementById('hijri').value = `${h.day} ${h.month.ar} ${h.year} هـ`;
+
+  ['day','gregorian','hijri'].forEach(syncField);
+}
+
+function cleanTime(t){
+  return String(t).split(' ')[0].trim();
+}
+
+function applyTimesFromApi(data){
+  const timings = data.data.timings;
+  const pairs = {
+    fajr:'Fajr',
+    sunrise:'Sunrise',
+    dhuhr:'Dhuhr',
+    asr:'Asr',
+    maghrib:'Maghrib',
+    isha:'Isha'
+  };
+  Object.entries(pairs).forEach(([local, apiKey])=>{
+    const val = cleanTime(timings[apiKey] || '');
+    document.getElementById(local).value = val;
+    syncField(local);
+  });
+}
+
+async function loadPrayerData(){
+  const city = document.getElementById('city').value.trim();
+  const country = document.getElementById('country').value.trim();
+  const dateIso = document.getElementById('selectedDate').value;
+
+  if(!city || !country || !dateIso){
+    setStatus('الرجاء تعبئة المدينة والدولة والتاريخ أولًا.', 'error');
+    return;
+  }
+
+  syncField('city');
+
+  const dateForApi = formatDateForApi(dateIso);
+  const url = `https://api.aladhan.com/v1/timingsByCity/${dateForApi}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=3`;
+
+  setStatus('جارِ جلب مواقيت الصلاة والتاريخ الهجري تلقائيًا...', '');
+
+  try{
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    if(data.code !== 200) throw new Error(data.status || 'API error');
+
+    applyMetaFromApi(data);
+    applyTimesFromApi(data);
+
+    setStatus('تم تحديث اليوم والتاريخ الهجري والميلادي والمواقيت بنجاح.', 'ok');
+  }catch(err){
+    // fallback for day / gregorian even if API fails
+    try{
+      const d = new Date(dateIso + 'T12:00:00');
+      document.getElementById('day').value = new Intl.DateTimeFormat('ar-SA', {weekday:'long'}).format(d);
+      document.getElementById('gregorian').value = new Intl.DateTimeFormat('ar-SA', {day:'numeric', month:'long', year:'numeric'}).format(d) + ' م';
+      ['day','gregorian'].forEach(syncField);
+    }catch(e){}
+
+    setStatus('تعذر جلب المواقيت تلقائيًا. تحقق من الإنترنت أو من كتابة اسم المدينة/الدولة بالإنجليزية. يمكنك التعديل يدويًا عند الحاجة.', 'error');
+  }
+}
+
+async function setTodayAndLoad(){
+  document.getElementById('selectedDate').value = setTodayISO();
+  await loadPrayerData();
+}
+
+async function exportPoster(id, filename){
+  const el=document.getElementById(id);
+  const oldTransform=el.style.transform;
+  el.style.transform='none';
+
+  const canvas=await html2canvas(el,{
+    scale:2,
+    useCORS:true,
+    backgroundColor:'#fffaf0',
+    logging:false
+  });
+
+  el.style.transform=oldTransform;
+
+  const link=document.createElement('a');
+  link.download=filename+'.png';
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+}
+
+document.getElementById('selectedDate').addEventListener('change', loadPrayerData);
+document.getElementById('city').addEventListener('input', ()=>syncField('city'));
+['reminder','hadith','source','benefit'].forEach(syncField);
+
+// initialize
+document.getElementById('selectedDate').value = setTodayISO();
+syncField('city');
+syncField('reminder');
+syncField('hadith');
+syncField('source');
+syncField('benefit');
+setTodayAndLoad();
+</script>
+</body>
+</html>
