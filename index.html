@@ -334,6 +334,19 @@ button{
     margin-bottom:calc((960px * ((100vw - 28px) / 540)) - 960px);
   }
 }
+
+/* v2 enhancements */
+.controls select{width:100%;border:1px solid #d7d2c6;border-radius:10px;padding:10px 11px;font-family:inherit;font-size:13px;background:#fffdfa}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.theme-card{border:2px solid #ddd;background:#fff;padding:10px;border-radius:12px;font-size:12px}.theme-card.active{border-color:var(--gold);box-shadow:0 0 0 2px rgba(185,137,45,.15)}
+.time-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.time-edit{border:1px solid #e2dccf;border-radius:11px;padding:8px;background:#fffdf8}.time-edit strong{display:block;font-size:12px;color:var(--green);margin-bottom:6px}.hm{display:grid;grid-template-columns:1fr 1fr;gap:5px}.hm input{text-align:center;padding:8px 4px;font-size:15px;direction:ltr}.hm small{text-align:center;font-size:9px;color:#777}
+.share-btn{width:100%;margin-top:12px;background:var(--green);color:#fff;font-size:16px;padding:14px}.method-note{font-size:10px;line-height:1.7;background:#f7f3e8;border-radius:10px;padding:9px;margin:8px 0;color:#68582f}
+/* themes */
+body[data-theme="navy"]{--green:#173a5e;--green2:#102d49;--gold:#c39a4a;--gold2:#e0c27c;--cream2:#f8f4e9;--ink:#19354c}
+body[data-theme="burgundy"]{--green:#6b2636;--green2:#4e1b28;--gold:#b98a46;--gold2:#d8b56f;--cream2:#fbf3e7;--ink:#4d2630}
+body[data-theme="damask"]{--green:#17665f;--green2:#114d48;--gold:#a97832;--gold2:#d2b06d;--cream2:#f7f1e5;--ink:#184c48}
+body[data-theme="minimal"]{--green:#3f5149;--green2:#2f4039;--gold:#a89062;--gold2:#c9b88d;--cream2:#faf8f2;--ink:#35443e}
+body[data-theme="minimal"] .corner,body[data-theme="minimal"] .lantern{opacity:.25}body[data-theme="minimal"] .poster:before{border-radius:22px}body[data-theme="minimal"] .title-badge{border-radius:14px}
+
 </style>
 </head>
 
@@ -342,88 +355,45 @@ button{
   <aside class="controls">
     <h2>بطاقتي اليومية</h2>
 
-    <h3>البيانات الأساسية</h3>
-    <div class="row">
-      <div class="field">
-        <label>المدينة</label>
-        <input id="city" value="Homs">
-      </div>
-      <div class="field">
-        <label>الدولة</label>
-        <input id="country" value="Syria">
-      </div>
+    <h3>التصميم</h3>
+    <div class="theme-grid" id="themeGrid">
+      <button class="theme-card active" data-theme="classic" onclick="setTheme('classic',this)">إسلامي كلاسيكي</button>
+      <button class="theme-card" data-theme="damask" onclick="setTheme('damask',this)">شامي / دمشقي</button>
+      <button class="theme-card" data-theme="navy" onclick="setTheme('navy',this)">كحلي وذهبي</button>
+      <button class="theme-card" data-theme="burgundy" onclick="setTheme('burgundy',this)">خمري وذهبي</button>
+      <button class="theme-card" data-theme="minimal" onclick="setTheme('minimal',this)">هادئ Minimal</button>
+      <button class="theme-card" onclick="randomTheme()">اختيار عشوائي</button>
     </div>
 
-    <div class="field">
-      <label>اختر التاريخ</label>
-      <input id="selectedDate" type="date">
+    <h3>التاريخ والمدينة</h3>
+    <div class="field"><label>المدينة</label>
+      <select id="city">
+        <option value="Homs" selected>حمص</option><option value="Damascus">دمشق</option><option value="Aleppo">حلب</option><option value="Hama">حماة</option><option value="Latakia">اللاذقية</option><option value="Tartus">طرطوس</option><option value="Idlib">إدلب</option><option value="Daraa">درعا</option><option value="As-Suwayda">السويداء</option><option value="Deir ez-Zor">دير الزور</option><option value="Raqqa">الرقة</option><option value="Al-Hasakah">الحسكة</option><option value="Qamishli">القامشلي</option>
+      </select>
     </div>
+    <input id="country" value="Syria" type="hidden">
+    <div class="field"><label>اختر التاريخ</label><input id="selectedDate" type="date"></div>
+    <div class="row"><div class="field"><label>اليوم</label><input id="day" readonly></div><div class="field"><label>الهجري</label><input id="hijri" readonly></div></div>
+    <div class="field"><label>الميلادي</label><input id="gregorian" readonly></div>
+    <div class="btns"><button class="primary" onclick="loadPrayerData()">تحديث المواقيت</button><button class="light" onclick="setTodayAndLoad()">اليوم</button></div>
+    <div class="method-note">طريقة الحساب الافتراضية لسوريا: الهيئة المصرية العامة للمساحة — الفجر 19.5° والعشاء 17.5°، مع مذهب العصر القياسي (شافعي/مالكي/حنبلي). يمكن تصحيح أي وقت يدويًا أدناه.</div>
 
-    <div class="row">
-      <div class="field">
-        <label>اليوم (تلقائي)</label>
-        <input id="day" readonly>
-      </div>
-      <div class="field">
-        <label>التاريخ الهجري (تلقائي)</label>
-        <input id="hijri" readonly>
-      </div>
-    </div>
+    <h3>تعديل مواقيت الصلاة</h3>
+    <div class="time-grid" id="timeEditors"></div>
 
-    <div class="field">
-      <label>التاريخ الميلادي (تلقائي)</label>
-      <input id="gregorian" readonly>
-    </div>
+    <h3>رسالة الصفحة الأولى</h3>
+    <div class="field"><label>اختر رسالة</label><select id="reminderChoice" onchange="chooseReminder()"></select></div>
+    <div class="field"><label>النص (يمكن تعديله)</label><textarea id="reminder"></textarea></div>
 
-    <div class="btns">
-      <button class="primary" onclick="loadPrayerData()">تحديث المواقيت تلقائيًا</button>
-      <button class="light" onclick="setTodayAndLoad()">العودة إلى اليوم</button>
-    </div>
+    <h3>حديث اليوم</h3>
+    <div class="field"><label>اختر حديثًا</label><select id="hadithChoice" onchange="chooseHadith()"></select></div>
+    <div class="field"><label>نص الحديث</label><textarea id="hadith"></textarea></div>
+    <div class="field"><label>المصدر</label><input id="source"></div>
+    <div class="field"><label>فائدة مختصرة</label><textarea id="benefit"></textarea></div>
 
-    <h3>مواقيت الصلاة (تُملأ تلقائيًا ويمكن تعديلها يدويًا إذا أردت)</h3>
-    <div class="row3">
-      <div class="field"><label>الفجر</label><input id="fajr" value=""></div>
-      <div class="field"><label>الشروق</label><input id="sunrise" value=""></div>
-      <div class="field"><label>الظهر</label><input id="dhuhr" value=""></div>
-    </div>
-    <div class="row3">
-      <div class="field"><label>العصر</label><input id="asr" value=""></div>
-      <div class="field"><label>المغرب</label><input id="maghrib" value=""></div>
-      <div class="field"><label>العشاء</label><input id="isha" value=""></div>
-    </div>
-
-    <div class="field">
-      <label>تذكرة قصيرة أسفل الصفحة الأولى</label>
-      <textarea id="reminder">لا تهجر مصحفك… ففيه حياة القلب.</textarea>
-    </div>
-
-    <h3>الصفحة الثانية — حديث اليوم</h3>
-    <div class="field">
-      <label>نص الحديث / التذكرة</label>
-      <textarea id="hadith">مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا، سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ.</textarea>
-    </div>
-
-    <div class="field">
-      <label>المصدر</label>
-      <input id="source" value="رواه مسلم">
-    </div>
-
-    <div class="field">
-      <label>فائدة مختصرة</label>
-      <textarea id="benefit">طلب العلم عبادة وطريق إلى الخير، وكل خطوة صادقة في التعلم تقرّب الإنسان من الفهم والعمل النافع.</textarea>
-    </div>
-
-    <div class="btns">
-      <button class="primary" onclick="exportPoster('page1','مواقيت-الصلاة')">تصدير الصفحة 1</button>
-      <button class="gold" onclick="exportPoster('page2','حديث-اليوم')">تصدير الصفحة 2</button>
-    </div>
-
-    <div id="status" class="status">عند فتح الصفحة سيتم افتراضيًا تحميل بيانات اليوم الحالي.</div>
-
-    <div class="tiny">
-      ملاحظة: جلب المواقيت يحتاج اتصالًا بالإنترنت لأنه يعتمد على خدمة مواقيت صلاة خارجية.
-      إذا لم تعمل الخدمة لأي سبب، تبقى الحقول قابلة للتعديل اليدوي.
-    </div>
+    <button class="share-btn" onclick="shareBoth()">مشاركة البطاقتين معًا</button>
+    <div class="btns"><button class="light" onclick="exportPoster('page1','مواقيت-الصلاة')">حفظ البطاقة 1</button><button class="light" onclick="exportPoster('page2','حديث-اليوم')">حفظ البطاقة 2</button></div>
+    <div id="status" class="status">سيتم تحميل بيانات اليوم الحالي تلقائيًا.</div>
   </aside>
 
   <main class="workspace">
@@ -492,151 +462,43 @@ button{
 </div>
 
 <script>
-const map = {
-  city:'out-city', day:'out-day', hijri:'out-hijri', gregorian:'out-gregorian',
-  fajr:'out-fajr', sunrise:'out-sunrise', dhuhr:'out-dhuhr',
-  asr:'out-asr', maghrib:'out-maghrib', isha:'out-isha',
-  reminder:'out-reminder', hadith:'out-hadith', source:'out-source', benefit:'out-benefit'
-};
-
-function syncField(id){
-  const src=document.getElementById(id);
-  const dst=document.getElementById(map[id]);
-  if(dst) dst.textContent = src.value;
-}
-Object.keys(map).forEach(id=>{
-  const el=document.getElementById(id);
-  if(el) el.addEventListener('input', ()=>syncField(id));
-});
-
-function setStatus(msg, cls=''){
-  const s=document.getElementById('status');
-  s.textContent=msg;
-  s.className='status'+(cls ? ' '+cls : '');
-}
-
-function formatDateForApi(isoDate){
-  const [y,m,d] = isoDate.split('-');
-  return `${d}-${m}-${y}`;
-}
-
-function setTodayISO(){
-  const t = new Date();
-  const yyyy = t.getFullYear();
-  const mm = String(t.getMonth()+1).padStart(2,'0');
-  const dd = String(t.getDate()).padStart(2,'0');
-  return `${yyyy}-${mm}-${dd}`;
-}
-
-function applyMetaFromApi(data){
-  const g = data.data.date.gregorian;
-  const h = data.data.date.hijri;
-
-  document.getElementById('day').value = g.weekday.ar;
-  document.getElementById('gregorian').value = `${g.day} ${g.month.ar} ${g.year} م`;
-  document.getElementById('hijri').value = `${h.day} ${h.month.ar} ${h.year} هـ`;
-
-  ['day','gregorian','hijri'].forEach(syncField);
-}
-
-function cleanTime(t){
-  return String(t).split(' ')[0].trim();
-}
-
-function applyTimesFromApi(data){
-  const timings = data.data.timings;
-  const pairs = {
-    fajr:'Fajr',
-    sunrise:'Sunrise',
-    dhuhr:'Dhuhr',
-    asr:'Asr',
-    maghrib:'Maghrib',
-    isha:'Isha'
-  };
-  Object.entries(pairs).forEach(([local, apiKey])=>{
-    const val = cleanTime(timings[apiKey] || '');
-    document.getElementById(local).value = val;
-    syncField(local);
-  });
-}
-
-async function loadPrayerData(){
-  const city = document.getElementById('city').value.trim();
-  const country = document.getElementById('country').value.trim();
-  const dateIso = document.getElementById('selectedDate').value;
-
-  if(!city || !country || !dateIso){
-    setStatus('الرجاء تعبئة المدينة والدولة والتاريخ أولًا.', 'error');
-    return;
-  }
-
-  syncField('city');
-
-  const dateForApi = formatDateForApi(dateIso);
-  const url = `https://api.aladhan.com/v1/timingsByCity/${dateForApi}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=3`;
-
-  setStatus('جارِ جلب مواقيت الصلاة والتاريخ الهجري تلقائيًا...', '');
-
-  try{
-    const res = await fetch(url);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const data = await res.json();
-    if(data.code !== 200) throw new Error(data.status || 'API error');
-
-    applyMetaFromApi(data);
-    applyTimesFromApi(data);
-
-    setStatus('تم تحديث اليوم والتاريخ الهجري والميلادي والمواقيت بنجاح.', 'ok');
-  }catch(err){
-    // fallback for day / gregorian even if API fails
-    try{
-      const d = new Date(dateIso + 'T12:00:00');
-      document.getElementById('day').value = new Intl.DateTimeFormat('ar-SA', {weekday:'long'}).format(d);
-      document.getElementById('gregorian').value = new Intl.DateTimeFormat('ar-SA', {day:'numeric', month:'long', year:'numeric'}).format(d) + ' م';
-      ['day','gregorian'].forEach(syncField);
-    }catch(e){}
-
-    setStatus('تعذر جلب المواقيت تلقائيًا. تحقق من الإنترنت أو من كتابة اسم المدينة/الدولة بالإنجليزية. يمكنك التعديل يدويًا عند الحاجة.', 'error');
-  }
-}
-
-async function setTodayAndLoad(){
-  document.getElementById('selectedDate').value = setTodayISO();
-  await loadPrayerData();
-}
-
-async function exportPoster(id, filename){
-  const el=document.getElementById(id);
-  const oldTransform=el.style.transform;
-  el.style.transform='none';
-
-  const canvas=await html2canvas(el,{
-    scale:2,
-    useCORS:true,
-    backgroundColor:'#fffaf0',
-    logging:false
-  });
-
-  el.style.transform=oldTransform;
-
-  const link=document.createElement('a');
-  link.download=filename+'.png';
-  link.href=canvas.toDataURL('image/png');
-  link.click();
-}
-
-document.getElementById('selectedDate').addEventListener('change', loadPrayerData);
-document.getElementById('city').addEventListener('input', ()=>syncField('city'));
-['reminder','hadith','source','benefit'].forEach(syncField);
-
-// initialize
-document.getElementById('selectedDate').value = setTodayISO();
-syncField('city');
-syncField('reminder');
-syncField('hadith');
-syncField('source');
-syncField('benefit');
-setTodayAndLoad();
+const cityArabic={Homs:'حمص',Damascus:'دمشق',Aleppo:'حلب',Hama:'حماة',Latakia:'اللاذقية',Tartus:'طرطوس',Idlib:'إدلب',Daraa:'درعا','As-Suwayda':'السويداء','Deir ez-Zor':'دير الزور',Raqqa:'الرقة','Al-Hasakah':'الحسكة',Qamishli:'القامشلي'};
+const prayerLabels={fajr:'الفجر',sunrise:'الشروق',dhuhr:'الظهر',asr:'العصر',maghrib:'المغرب',isha:'العشاء'};
+const hadiths=[
+ {title:'الأعمال بالنيات',text:'إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى.',source:'صحيح البخاري (1) — وصحيح مسلم (1907)',benefit:'صلاح العمل يبدأ من صلاح النية؛ فاستحضار المقصد يحوّل العادة إلى عبادة والعمل اليومي إلى معنى.'},
+ {title:'طريق العلم',text:'مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا، سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ.',source:'صحيح مسلم (2699)',benefit:'التعلّم النافع رحلة مستمرة؛ وكل خطوة صادقة في طلب العلم باب للفهم والعمل والخير.'},
+ {title:'الكلمة الطيبة',text:'الْكَلِمَةُ الطَّيِّبَةُ صَدَقَةٌ.',source:'صحيح البخاري (2989) — وصحيح مسلم (1009)',benefit:'قد لا تحتاج صناعة أثر طيب إلى مال أو جهد كبير؛ أحيانًا تبدأ بكلمة صادقة ولطيفة.'},
+ {title:'أدوم الأعمال',text:'أَحَبُّ الأَعْمَالِ إِلَى اللَّهِ أَدْوَمُهَا وَإِنْ قَلَّ.',source:'صحيح البخاري (6464) — وصحيح مسلم (783)',benefit:'الاستمرار القليل أثبت أثرًا من الحماس المؤقت؛ اختر من الخير ما تستطيع المداومة عليه.'},
+ {title:'حب الخير للآخرين',text:'لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ.',source:'صحيح البخاري (13) — وصحيح مسلم (45)',benefit:'اكتمال الخُلُق يظهر حين نتمنى للآخرين من الخير ما نتمناه لأنفسنا.'},
+ {title:'قل خيرًا أو اصمت',text:'مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ.',source:'صحيح البخاري (6018) — وصحيح مسلم (47)',benefit:'قبل الكلام اسأل: هل فيه خير أو نفع؟ إن لم يكن، فقد يكون الصمت أحكم.'}
+];
+const reminders=['لا تهجر مصحفك… ففيه حياة القلب.','ابدأ يومك بذكر الله، واجعل لك وردًا لا تتركه.','استغفر الله بقلب حاضر؛ فالاستغفار باب واسع للسكينة.','لا تستصغر معروفًا؛ فقد يكون أثره عند غيرك أكبر مما تظن.','اجعل لك خبيئة من عمل صالح لا يعلم بها إلا الله.','نص مخصص…'];
+const map={day:'out-day',hijri:'out-hijri',gregorian:'out-gregorian',reminder:'out-reminder',hadith:'out-hadith',source:'out-source',benefit:'out-benefit'};
+function syncField(id){const a=document.getElementById(id),b=document.getElementById(map[id]);if(a&&b)b.textContent=a.value}
+function setStatus(msg,cls=''){const s=document.getElementById('status');s.textContent=msg;s.className='status'+(cls?' '+cls:'')}
+function localISO(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function apiDate(iso){const [y,m,d]=iso.split('-');return `${d}-${m}-${y}`}
+function cleanTime(t){return String(t||'').split(' ')[0].trim()}
+function splitTime(v){const [h='00',m='00']=v.split(':');return [h.padStart(2,'0'),m.padStart(2,'0')]}
+function updatePrayer(id){const h=document.getElementById(id+'H').value.padStart(2,'0'),m=document.getElementById(id+'M').value.padStart(2,'0');document.getElementById('out-'+id).textContent=`${h}:${m}`}
+function setPrayer(id,v){const [h,m]=splitTime(v);document.getElementById(id+'H').value=h;document.getElementById(id+'M').value=m;updatePrayer(id)}
+function buildTimeEditors(){const box=document.getElementById('timeEditors');box.innerHTML='';Object.entries(prayerLabels).forEach(([id,label])=>{box.insertAdjacentHTML('beforeend',`<div class="time-edit"><strong>${label}</strong><div class="hm"><div><input id="${id}H" inputmode="numeric" maxlength="2" value="00"><small>ساعة</small></div><div><input id="${id}M" inputmode="numeric" maxlength="2" value="00"><small>دقيقة</small></div></div></div>`);['H','M'].forEach(x=>document.getElementById(id+x).addEventListener('input',()=>{let e=document.getElementById(id+x);e.value=e.value.replace(/\D/g,'').slice(0,2);updatePrayer(id)}))})}
+function fillLibraries(){const hc=document.getElementById('hadithChoice');hadiths.forEach((h,i)=>hc.add(new Option(h.title,i)));const rc=document.getElementById('reminderChoice');reminders.forEach((r,i)=>rc.add(new Option(r,i)));chooseHadith();chooseReminder()}
+function chooseHadith(){const h=hadiths[+document.getElementById('hadithChoice').value||0];['hadith','source','benefit'].forEach((id,i)=>{document.getElementById(id).value=[h.text,h.source,h.benefit][i];syncField(id)})}
+function chooseReminder(){const i=+document.getElementById('reminderChoice').value||0;if(i<reminders.length-1){document.getElementById('reminder').value=reminders[i];syncField('reminder')}}
+function setTheme(t,btn){document.body.dataset.theme=t==='classic'?'':t;document.querySelectorAll('.theme-card').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');localStorage.setItem('dailyTheme',t)}
+function randomTheme(){const ts=['classic','damask','navy','burgundy','minimal'];const t=ts[Math.floor(Math.random()*ts.length)];const b=document.querySelector(`[data-theme="${t}"]`);setTheme(t,b)}
+function updateCity(){document.getElementById('out-city').textContent=cityArabic[document.getElementById('city').value]||document.getElementById('city').value}
+function updateDateLocally(){const iso=document.getElementById('selectedDate').value;if(!iso)return;const d=new Date(iso+'T12:00:00');document.getElementById('day').value=new Intl.DateTimeFormat('ar-SY',{weekday:'long'}).format(d);document.getElementById('gregorian').value=new Intl.DateTimeFormat('ar-SY',{day:'numeric',month:'long',year:'numeric'}).format(d)+' م';try{document.getElementById('hijri').value=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(d)+' هـ'}catch(e){};['day','gregorian','hijri'].forEach(syncField)}
+async function loadPrayerData(){const city=document.getElementById('city').value,date=document.getElementById('selectedDate').value;updateCity();updateDateLocally();setStatus('جارِ جلب المواقيت…');try{const url=`https://api.aladhan.com/v1/timingsByCity/${apiDate(date)}?city=${encodeURIComponent(city)}&country=Syria&method=5&school=0`;const r=await fetch(url);if(!r.ok)throw Error();const data=await r.json();const t=data.data.timings;({fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Maghrib',isha:'Isha'});for(const [id,key] of Object.entries({fajr:'Fajr',sunrise:'Sunrise',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Maghrib',isha:'Isha'}))setPrayer(id,cleanTime(t[key]));const g=data.data.date.gregorian,h=data.data.date.hijri;document.getElementById('day').value=g.weekday.ar;document.getElementById('gregorian').value=`${g.day} ${g.month.ar} ${g.year} م`;document.getElementById('hijri').value=`${h.day} ${h.month.ar} ${h.year} هـ`;['day','gregorian','hijri'].forEach(syncField);setStatus('تم تحديث المواقيت. راجعها مقابل تقويم الأوقاف المحلي عند الحاجة.','ok')}catch(e){setStatus('تعذر جلب المواقيت. يمكنك إدخال الساعة والدقيقة يدويًا.','error')}}
+async function setTodayAndLoad(){document.getElementById('selectedDate').value=localISO();await loadPrayerData()}
+async function renderPoster(id){const el=document.getElementById(id),old=el.style.transform;el.style.transform='none';const c=await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#fffaf0',logging:false});el.style.transform=old;return c}
+async function canvasFile(id,name){const c=await renderPoster(id);const blob=await new Promise(res=>c.toBlob(res,'image/png',1));return new File([blob],name,{type:'image/png'})}
+async function shareBoth(){setStatus('جارِ تجهيز البطاقتين للمشاركة…');try{const d=document.getElementById('selectedDate').value;const files=[await canvasFile('page1',`01-prayer-times-${d}.png`),await canvasFile('page2',`02-daily-hadith-${d}.png`)];if(navigator.canShare&&navigator.canShare({files})&&navigator.share){await navigator.share({files,title:'بطاقتي اليومية'});setStatus('تم فتح نافذة المشاركة.','ok')}else{throw Error('unsupported')}}catch(e){if(e.name==='AbortError'){setStatus('تم إلغاء المشاركة.');return}setStatus('المشاركة المباشرة غير مدعومة هنا؛ سيتم حفظ الصورتين بدلًا منها.','error');await exportPoster('page1','01-مواقيت-الصلاة');setTimeout(()=>exportPoster('page2','02-حديث-اليوم'),400)}}
+async function exportPoster(id,name){const c=await renderPoster(id),a=document.createElement('a');a.download=name+'.png';a.href=c.toDataURL('image/png');a.click()}
+['reminder','hadith','source','benefit'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>syncField(id)));
+document.getElementById('selectedDate').addEventListener('change',loadPrayerData);document.getElementById('city').addEventListener('change',loadPrayerData);
+buildTimeEditors();fillLibraries();const saved=localStorage.getItem('dailyTheme')||'classic';setTheme(saved,document.querySelector(`[data-theme="${saved}"]`));document.getElementById('selectedDate').value=localISO();setTodayAndLoad();
 </script>
 </body>
 </html>
