@@ -1,28 +1,133 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>نفحات يومية</title>
-<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#efe8db">
+  <title>نفحات يومية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+
+  <section class="preview-area">
+    <div class="preview-shell">
+      <article id="card" class="daily-card theme-green">
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="lantern" aria-hidden="true"><span></span></div>
+        <div class="leaves" aria-hidden="true">❧ ❧</div>
+
+        <header class="card-header">
+          <h1>نفحات يومية</h1>
+          <p>من القرآن والسنة .. فائدة ودعاء</p>
+          <div class="meta">
+            <span id="dayName">—</span>
+            <i></i>
+            <span id="dateText">—</span>
+            <i></i>
+            <span>📍 <b id="placeText">حمص - سوريا</b></span>
+          </div>
+        </header>
+
+        <section id="prayerGrid" class="prayer-grid"></section>
+
+        <section class="content-block verse-block">
+          <h2>آية اليوم</h2>
+          <div class="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+          <div id="verseText" class="main-text"></div>
+          <div id="verseRef" class="reference"></div>
+        </section>
+
+        <section class="content-block hadith-block">
+          <h2>حديث اليوم</h2>
+          <div id="hadithText" class="main-text"></div>
+          <div id="hadithRef" class="reference"></div>
+        </section>
+
+        <section class="content-block benefit-block">
+          <h2>الفائدة</h2>
+          <div id="benefitText" class="support-text"></div>
+        </section>
+
+        <section class="content-block dua-block">
+          <h2>دعاء اليوم</h2>
+          <div id="duaText" class="support-text"></div>
+        </section>
+
+        <footer class="signature-wrap">
+          <span id="signature"></span>
+        </footer>
+      </article>
+    </div>
+  </section>
+
+  <section class="controls">
+    <div class="controls-head">
+      <h3>نفحات يومية</h3>
+      <p>البطاقة جاهزة تلقائيًا. غيّرها فقط إن رغبت.</p>
+    </div>
+
+    <button id="nextContent" class="btn primary">↻ محتوى آخر</button>
+    <button id="shareCard" class="btn gold">مشاركة البطاقة</button>
+
+    <div class="button-row">
+      <button id="nextTheme" class="btn light">تصميم آخر</button>
+      <button id="saveCard" class="btn light">حفظ الصورة</button>
+    </div>
+
+    <div class="settings">
+      <label>الدولة
+        <select id="country"></select>
+      </label>
+      <label>المدينة
+        <select id="city"></select>
+      </label>
+      <label>الاسم / التوقيع <small>(اختياري)</small>
+        <input id="name" placeholder="إذا تركته فارغًا لن يظهر توقيع">
+      </label>
+    </div>
+
+    <details>
+      <summary>تعديل متقدم</summary>
+
+      <label>التاريخ
+        <input id="date" type="date">
+      </label>
+
+      <h4>تعديل أوقات الصلاة</h4>
+      <p class="mini-note">كل وقت له خانة للساعة وخانة للدقائق. لا حاجة لكتابة النقطتين.</p>
+      <div id="manualTimes" class="manual-times"></div>
+
+      <label>الآية
+        <textarea id="editVerse"></textarea>
+      </label>
+      <label>مرجع الآية
+        <input id="editVerseRef">
+      </label>
+      <label>الحديث
+        <textarea id="editHadith"></textarea>
+      </label>
+      <label>المصدر
+        <input id="editHadithRef">
+      </label>
+      <label>الفائدة
+        <textarea id="editBenefit"></textarea>
+      </label>
+      <label>الدعاء
+        <textarea id="editDua"></textarea>
+      </label>
+    </details>
+
+    <div id="status" class="status">حمص هي المدينة الافتراضية.</div>
+  </section>
+
+</main>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link rel="stylesheet" href="style.css"></head><body>
-<div class="app">
-<aside class="ctrl"><h1>نفحات يومية</h1><p class="hint">افتحها، راجعها، ثم شاركها.</p>
-<button id="next" class="primary">↻ محتوى آخر</button><button id="share" class="gold">مشاركة البطاقة</button>
-<div class="row"><button id="theme" class="soft">لون آخر</button><button id="save" class="soft">حفظ الصورة</button></div>
-<label>الدولة</label><select id="country"></select><label>المدينة</label><select id="city"></select>
-<label>الاسم / التوقيع (اختياري)</label><input id="name" placeholder="يُحفظ تلقائيًا على هذا الجهاز">
-<details><summary>تعديل متقدم</summary><label>التاريخ</label><input type="date" id="date">
-<label>الآية</label><textarea id="ve"></textarea><label>مرجع الآية</label><input id="vr">
-<label>الحديث</label><textarea id="he"></textarea><label>المصدر</label><input id="hr">
-<label>الفائدة</label><textarea id="be"></textarea><label>الدعاء</label><textarea id="de"></textarea>
-</details><div class="status" id="status">حمص افتراضيًا. الاسم والمدينة يُحفظان على الجهاز.</div></aside>
-<main class="stage"><div class="viewport" id="viewport"><div class="card" id="card"><div class="frame"></div>
-<div class="title">نفحات يومية</div><div class="subtitle">من القرآن والسنة .. فائدة ودعاء</div>
-<div class="meta"><b id="day"></b><span>|</span><span id="greg"></span><span>|</span><span>📍 <b id="loc"></b></span></div>
-<div class="prayers" id="prayers"></div>
-<div class="block b1"><div class="badge">آية اليوم</div><div class="basmalah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div><div class="q" id="verse"></div><div class="ref" id="vref"></div></div>
-<div class="block b2"><div class="badge">حديث اليوم</div><div class="h" id="hadith"></div><div class="ref" id="href"></div></div>
-<div class="block b3"><div class="badge">الفائدة</div><div class="benefit" id="benefit"></div></div>
-<div class="block b4"><div class="badge">دعاء اليوم</div><div class="dua" id="dua"></div></div>
-<div class="sig" id="sig"></div></div></div></main></div>
-<script src="app.js"></script></body></html>
+<script src="app.js"></script>
+</body>
+</html>
